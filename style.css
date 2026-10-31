@@ -1,0 +1,1 @@
+.electronics-design{display:flex;flex-direction:column;min-height:0;height:100%;gap:.3rem;padding:.4rem}.electronics-design-bar{display:flex;gap:.3rem;flex-wrap:wrap}.electronics-design-bar input{width:12rem}.electronics-design-note,.electronics-design-status{margin:0}.electronics-design iframe{border:1px solid #a5adbd;flex:1;min-height:260px;width:100%;background:white}

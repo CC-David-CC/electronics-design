@@ -1,0 +1,22 @@
+{
+  "assets": [
+    "vendor/designElectronics.js",
+    "vendor/designElectronics.wasm",
+    "vendor/designElectronics.data",
+    "vendor/loader.js",
+    "vendor/index.html",
+    "vendor/frame.css",
+    "licenses/SDL.txt",
+    "licenses/SDL_ttf.txt",
+    "licenses/designElectronics.txt",
+    "licenses/emscripten.txt",
+    "licenses/fonts.txt",
+    "licenses/freetype-FTL.txt",
+    "licenses/freetype.txt",
+    "licenses/harfbuzz.txt",
+    "licenses/minih264.txt",
+    "licenses/minimp4.txt",
+    "licenses/plutosvg.txt",
+    "licenses/plutovg.txt"
+  ]
+}
