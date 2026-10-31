@@ -4,7 +4,7 @@ import hashlib,json,shutil
 from pathlib import Path
 root=Path(__file__).resolve().parent
 source=root.parents[2]/'.build/design-electronics-rebuilt'
-expected={'designElectronics.js':'937d57c71413cad31baf073c914baf4bb1e17c679cfe6c603cbcbef5de25fea8','designElectronics.wasm':'cd3a89b0ff1232b598a91b7ea574d36ee6385d65330a3ffe0327b5f4c359bb86','designElectronics.data':'b47f7a58ff1e8768885267b349018d60932c535938a301c0f3b6a2b0c5f8a7ed'}
+expected={'designElectronics.js':'4d6c5602fbd164465144b9edf223cdb8b7b6bac57eca99905dd81d56359d2c22','designElectronics.wasm':'1fb748273aeed5f3b74d0993ec9381548b341704f4c75f05ff60928078d2a693','designElectronics.data':'b47f7a58ff1e8768885267b349018d60932c535938a301c0f3b6a2b0c5f8a7ed'}
 validated={}
 for name,h in expected.items():
  data=(source/name).read_bytes()
