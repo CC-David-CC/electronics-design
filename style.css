@@ -2,3 +2,5 @@
 .electronics-design-bar button,.electronics-design-bar input,.electronics-design-bar select{min-height:40px}.electronics-design-bar input{min-width:0;max-width:100%;flex:1 1 180px}@media(max-width:600px){.electronics-design-bar button,.electronics-design-bar input,.electronics-design-bar select{min-height:44px}}
 
 @media(max-width:600px){.electronics-split{display:none}}
+
+.electronics-design-file-warning{margin:4px 6px;padding:6px 8px;border-left:4px solid #a65300;background:#fff1d6;color:#4d2900}
