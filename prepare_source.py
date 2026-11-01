@@ -95,6 +95,11 @@ patch(root/'.build/design-electronics-upstream/src/app.cpp','8903d18de4fdf8cee4b
     ('    loadGitHubSettings();','    // Desktop account storage replaces the upstream GitHub integration.')])
 patch(root/'.build/design-electronics-upstream/src/panels.cpp','41c71178b0640b9c5559956c662f5fd19b497edeb8366d678f0873b7e8e28758',[
     ('        item("Version History…", [this]() { openHistory(); }, sc("⇧H")),\n        item("Commit to GitHub…", [this]() { openCommitSheet(); }, sc("⇧K")),\n        item(githubConnected() ? "GitHub Account (@" + gh.login + ")…" : "Connect GitHub…", [this]() { openGitHubAccount(); }),\n','')])
+# Submenus can overlap their parent on narrow windows. The deepest visible menu
+# must receive input first; otherwise a tap on a child can open a parent item.
+patch(root/'.build/design-electronics-upstream/src/ui.cpp','ea018bf67da5be391e465fea31cdaefb22a6f09f6f83b768c3f3dac32fcb371d',[
+    ('            bool hot = ir.contains(in->mouse) && it.enabled;',
+     '            bool covered = level + 1 < menus_.size() && menus_[level + 1].rect.contains(in->mouse);\n            bool hot = !covered && ir.contains(in->mouse) && it.enabled;')])
 patch(root/'.build/design-electronics-upstream/CMakeLists.txt','c382dd58bdb89ac37d55bcd7585e8de7f8afa5299a92b2e6c8081677c925148e',[
     ('"-sEXPORTED_FUNCTIONS=[\'_main\',\'_de_web_opened\']"','"-sEXPORTED_FUNCTIONS=[\'_main\',\'_de_web_opened\',\'_de_web_epoch\',\'_de_web_revision\',\'_de_web_snapshot\',\'_de_web_load\',\'_de_web_mark_saved\']"')])
 print('Applied desktop file bridge to pinned upstream source')

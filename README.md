@@ -18,7 +18,7 @@ The source revisions below are pinned for this local build. The SDL and SDL_ttf 
 - SDL3: `7e03137ea0a22d1a754426b4dc305e46f58a1a08`
 - SDL_ttf: `1f759d81f0b9662558d916655f05942e038d6c57`
 - SDL_ttf submodules: FreeType `535d2993d2cab67cc8b270132b1b1bcb62f269aa`, HarfBuzz `950d232cdcd29e2e83a2099307e5624a8f1aa937`, PlutoSVG `96e115bc0f837dbccf260a05ad23978b6b54f731`, PlutoVG `a6e0d682d08a5e993694ad82a23e5d45e831f315` (their nested submodules are pinned by those Git trees).
-- Emscripten SDK 5.0.7: `6cd98e86d7749ff98b82b7f2ae78eb4f01942788`.
+- Emscripten SDK 5.0.7 resolves to toolchain release `6cd98e86d7749ff98b82b7f2ae78eb4f01942788` (this is a toolchain release identifier, not an emsdk Git commit).
 
 From SIMPLIFIED, a clean source checkout can be prepared as follows. Build dependencies and generated WebAssembly live under `.build/`, outside Git:
 
@@ -67,3 +67,5 @@ The large case round-trips a valid design with 9 MiB of notes; it does not estab
 `tests/electronics-design-split.test.mjs` exercises the actual WebAssembly editor in a 4K-sized mock-host window: selecting each pane, editing and deleting components, undo, saving, and fallback after width and height changes. `tests/electronics-design-split-account.test.mjs` checks a 4K-sized account workflow, server sync, narrow resize and fresh phone-sized session recovery; it also passed against the live test site. These use emulated viewports and do not establish every editing tool or physical touch behavior.
 
 A separate notice remains visible when My files detects that the open project changed, is unavailable or has conflicting copies. The current design stays open; save a copy or reopen it after resolving conflicts. Project and export overwrite checks use file metadata rather than rereading file contents. The notice depends on mirror synchronization. Local desktop, emulated-phone and 4K and live emulated-phone account tests cover a changed project, a conflict during save, preserved copies and fresh-session recovery; listener cleanup and the existing native-editor workflow were also tested locally.
+
+A real canvas-menu test found that on an emulated phone the visible File submenu overlaps its parent and a tap can select a parent item underneath. Desktop mouse open/save passed. A source patch in `prepare_source.py` gives the overlapping child menu priority; it applied cleanly to the pinned source with the existing split-view patch, but has not yet been compiled or tested in the browser. The installed/live WebAssembly has not been changed, and physical touch is unverified. An isolated rebuild is being prepared on box-git under `/srv/data/codi-electronics-menu-candidate`; the emsdk checkout uses Git tag 5.0.7 at `41190c21c662e9cc1962aea94e71cbae9fd2fc87`, which resolves to the same toolchain release above. Different build outputs must be reviewed before packaging.
