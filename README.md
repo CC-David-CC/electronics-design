@@ -4,7 +4,7 @@ This independent app wraps the upstream [designElectronics](https://github.com/r
 
 On a sufficiently wide and tall window, choose **Show three views** to place breadboard, schematic and PCB side by side. They display and edit one shared design. Click a pane to make it active; the editor’s tools and keyboard shortcuts operate on that pane. Each view has its own placement and zoom. Choose **Use single view** to return to tabs. Shrinking the window falls back to a single view without discarding the project; enlarge it and choose three views again to restore the layout. The threshold depends on the editor’s UI scale. On phones use the editor’s view tabs. This experimental view mode has been tested with the supplied example, not every tool or physical device.
 
-**Storage:** Use the embedded editor's **File → Open** to choose `.dez` projects from My files; upload from your computer in Files first. **File → Save** writes the design to My files and starts server synchronization. **File → Save As** asks for a new My files path. Save conflicts and existing files require attention rather than silently overwriting them. If you edit or start another design during a save, the later work remains unsaved. The window warns before discarding changes, conservatively including some interactions that may not modify the design. Native exports such as Gerbers are saved to My files when the embedded editor creates them; a themed path prompt asks where to put each export. Use **File → Import Part** to choose a `.dezpart` or supported part JSON from My files. It appears under Custom in the editor; imported parts that are not placed in the design remain temporary to that editor window. Placed part definitions are included in saved designs. The GitHub account and version-history interface is disabled pending a desktop-integrated replacement.
+**Storage:** Use the embedded editor's **File → Open** to choose `.dez` projects from My files; upload from your computer in Files first. **File → Save** writes a new design to My files and starts server synchronization. After opening a project, use **File → Save As** and choose a different path; the opened source remains protected in that window. Save conflicts and existing files require attention rather than silently overwriting them. If you edit or start another design during a save, the later work remains unsaved. The window warns before discarding changes, conservatively including some interactions that may not modify the design. Native exports such as Gerbers are saved to My files when the embedded editor creates them; a themed path prompt asks where to put each export. Use **File → Import Part** to choose a `.dezpart` or supported part JSON from My files. It appears under Custom in the editor; imported parts that are not placed in the design remain temporary to that editor window. Placed part definitions are included in saved designs. The GitHub account and version-history interface is disabled pending a desktop-integrated replacement.
 
 Projects and captured outputs are limited to 128 MiB; large projects need substantial browser and WebAssembly memory, and that maximum is not validated on every device. The embedded editor is trusted same-origin code, not a security sandbox. Simulation is an aid to design, not proof that hardware is safe or will work.
 
@@ -81,3 +81,15 @@ The desktop restore reference follows the project most recently opened or
 saved. Starting a new design clears the old reference, so refreshing cannot
 reopen that unrelated project. An unsaved design itself is not restored;
 save it to My files first.
+
+Before opening a project, the host rejects unsupported newer format versions,
+invalid part lists and malformed wires or references. This avoids known cases
+where the pinned editor would silently discard data on a later save. This is a
+limited preflight, not comprehensive project validation: the editor may still
+skip unknown same-version part types or normalize other fields. Keep the
+original file and inspect a design before using or resaving it. Because the
+editor cannot yet verify every part, it requires Save As to a different path
+for every opened project and continues to protect that original in the same
+window, even after a copy is saved. Local
+registered-account desktop and emulated-phone tests cover the rejection,
+unchanged current design, native project loading, synchronization and reopening.
