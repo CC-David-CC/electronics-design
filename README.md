@@ -93,3 +93,9 @@ for every opened project and continues to protect that original in the same
 window, even after a copy is saved. Local
 registered-account desktop and emulated-phone tests cover the rejection,
 unchanged current design, native project loading, synchronization and reopening.
+
+Save As holds one naming dialog at a time and rejects a stale answer if the
+underlying design changes while it is open. Local registered-account desktop
+and emulated-phone tests used the real editor to replace the design during the
+prompt, checked that no unintended file was created, then saved, synced and
+reopened the intended design. Physical touch remains unverified.
