@@ -82,6 +82,15 @@ saved. Starting a new design clears the old reference, so refreshing cannot
 reopen that unrelated project. An unsaved design itself is not restored;
 save it to My files first.
 
+If a saved project cannot be restored due to a temporary read failure or
+conflict, **Retry saved project** tries again and asks before discarding edits
+in the current design. Confirmed missing or invalid project references are
+cleared without changing the original file. Local account tests on desktop and
+emulated-phone viewports exercised a real editor project, save and sync,
+fresh-browser retry, cancel and confirm, restored parts and wires, and invalid
+file preservation. They do not validate component coverage, hardware behavior,
+or physical touch.
+
 Before opening a project, the host rejects unsupported newer format versions,
 invalid part lists and malformed wires or references. This avoids known cases
 where the pinned editor would silently discard data on a later save. This is a
