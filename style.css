@@ -4,3 +4,6 @@
 @media(max-width:600px){.electronics-split{display:none}}
 
 .electronics-design-file-warning,.electronics-design-source-warning{margin:4px 6px;padding:6px 8px;border-left:4px solid #a65300;background:#fff1d6;color:#4d2900}
+
+.electronics-design details{flex:none;font-size:.9rem;max-height:45%;overflow:auto}.electronics-design summary{cursor:pointer;min-height:28px}.electronics-design-lesson{padding:0 .4rem}.electronics-design-lesson p{margin:.35rem 0}
+@media(max-width:600px){.electronics-design summary{min-height:44px;padding-top:10px;padding-bottom:10px;box-sizing:border-box}}

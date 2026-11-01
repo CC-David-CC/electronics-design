@@ -1,6 +1,6 @@
 # Electronics Design — experimental
 
-This independent app wraps the upstream [designElectronics](https://github.com/rORrEtboLt/designElectronics) browser editor. Its MIT-licensed code provides breadboard, schematic, PCB, simulation, an autorouter and Gerber export. It is an alternative to the separate tscircuit PCB investigation, not a tscircuit frontend. The included example opens in PCB view; it is not a manufacture-ready circuit. Inspect design rules and fabrication output independently before making a board.
+This independent app wraps the upstream [designElectronics](https://github.com/rORrEtboLt/designElectronics) browser editor. Its MIT-licensed code provides breadboard, schematic, PCB, simulation, an autorouter and Gerber export. It is an alternative to the separate tscircuit PCB investigation, not a tscircuit frontend. The included Arduino pin-13 LED example opens in PCB view. Open **Start with the Arduino LED example** below the editor for a short walkthrough of the views, simulation and saving. It is not a manufacture-ready circuit. Inspect design rules and fabrication output independently before making a board.
 
 On a sufficiently wide and tall window, choose **Show three views** to place breadboard, schematic and PCB side by side. They display and edit one shared design. Click a pane to make it active; the editor’s tools and keyboard shortcuts operate on that pane. Each view has its own placement and zoom. Choose **Use single view** to return to tabs. Shrinking the window falls back to a single view without discarding the project; enlarge it and choose three views again to restore the layout. The threshold depends on the editor’s UI scale. On phones use the editor’s view tabs. This experimental view mode has been tested with the supplied example, not every tool or physical device.
 
@@ -99,3 +99,11 @@ underlying design changes while it is open. Local registered-account desktop
 and emulated-phone tests used the real editor to replace the design during the
 prompt, checked that no unintended file was created, then saved, synced and
 reopened the intended design. Physical touch remains unverified.
+
+The collapsed starter guide describes the actual built-in Arduino LED example,
+its three views, simulation, and account saving. Local registered-account
+desktop and emulated-phone tests verified the example’s part types and title,
+collapsed/open guide, save and server sync, and fresh-session reopen. The
+phone test verified the guide’s 44 px summary target, not physical touch. It
+inspected the example data but did not run its simulated sketch or verify a
+physical circuit.
