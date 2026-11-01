@@ -107,3 +107,11 @@ collapsed/open guide, save and server sync, and fresh-session reopen. The
 phone test verified the guide’s 44 px summary target, not physical touch. It
 inspected the example data but did not run its simulated sketch or verify a
 physical circuit.
+
+Generated exports suggest the folder of the last saved or opened project in
+My files; the path remains editable. The folder is captured when each export
+is received, so a queued output does not silently follow a different project.
+A new unsaved project suggests My files root. Local registered-account desktop
+and emulated-phone tests exercised queued and custom destinations, sync and a
+fresh-session reopen using synthetic editor export messages. Those tests do not
+verify Gerber generation or fabrication output; inspect those independently.
