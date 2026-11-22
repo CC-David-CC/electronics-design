@@ -1,0 +1,88 @@
+--- a/src/app.h
++++ b/src/app.h
+@@ -149,6 +149,7 @@
+     std::string search;
+     int category = -1;
+     Rect rTop, rCanvas, rRight, rBottom, rBin, rInspector;
++    int toolbarRows = 1;
+     // Three viewports share this App's one Document and simulation.
+     bool splitRequested = false, splitActive = false;
+     Rect wholeCanvas, splitPane[NUM_VIEWS];
+--- a/src/app.cpp
++++ b/src/app.cpp
+@@ -138,7 +138,11 @@
+         return;
+     }
+     rTop = Rect((float)safe.x, top, (float)safe.w, 48 * s);
+-    float tbH = (compact ? 62.f : 60.f) * s;
++    // At least 64 logical pixels keep the PCB action names and touch targets distinct.
++    const int compactTools = (view == PCB ? 9 : 8) + (agentsSupported() ? 1 : 0);
++    const int maxColumns = std::max(1, (int)(safe.w / (64.f * s)));
++    toolbarRows = compact ? (compactTools + maxColumns - 1) / maxColumns : 1;
++    float tbH = (compact ? 62.f * toolbarRows : 60.f) * s;
+     rBottom = Rect((float)safe.x, bottom - tbH, (float)safe.w, tbH);
+     float mid = rBottom.y - rTop.b();
+     if (!compact) {
+--- a/src/panels.cpp
++++ b/src/panels.cpp
+@@ -431,8 +431,8 @@
+                 g.text({x, y + 10 * s}, buf, 12.5f * s, ui.th.text, 0, FONT_MONO);
+                 y += 26 * s;
+                 float bw = (w - 12 * s) / 3;
+-                if (ui.button("rotl", Rect(x, y, bw, rowH), "⟲ Rotate", BTN_NORMAL, false, !p->def->isBoard)) rotateSelection(-1);
+-                if (ui.button("rotr", Rect(x + bw + 6 * s, y, bw, rowH), "Rotate ⟳", BTN_NORMAL, false, !p->def->isBoard)) rotateSelection(1);
++                if (ui.button("rotl", Rect(x, y, bw, rowH), "Rotate left", BTN_NORMAL, false, !p->def->isBoard)) rotateSelection(-1);
++                if (ui.button("rotr", Rect(x + bw + 6 * s, y, bw, rowH), "Rotate right", BTN_NORMAL, false, !p->def->isBoard)) rotateSelection(1);
+                 if (ui.button("flip", Rect(x + 2 * (bw + 6 * s), y, bw, rowH), "Flip", BTN_NORMAL, false, !p->def->isBoard)) flipSelection();
+                 y += rowH + 6 * s;
+             } else {
+@@ -563,8 +563,8 @@
+         g.text({x, y + 14 * s}, std::to_string(nsel) + " items selected", 16 * s, ui.th.text, 0);
+         y += 40 * s;
+         float bw = (w - 12 * s) / 3;
+-        if (ui.button("mrotl", Rect(x, y, bw, rowH), "⟲ Rotate")) rotateSelection(-1);
+-        if (ui.button("mrotr", Rect(x + bw + 6 * s, y, bw, rowH), "Rotate ⟳")) rotateSelection(1);
++        if (ui.button("mrotl", Rect(x, y, bw, rowH), "Rotate left")) rotateSelection(-1);
++        if (ui.button("mrotr", Rect(x + bw + 6 * s, y, bw, rowH), "Rotate right")) rotateSelection(1);
+         if (ui.button("mflip", Rect(x + 2 * (bw + 6 * s), y, bw, rowH), "Flip")) flipSelection();
+         y += rowH + 6 * s;
+         if (ui.button("mdup", Rect(x, y, w, rowH), "Duplicate")) duplicate();
+@@ -669,11 +669,16 @@
+     }
+     tools.push_back({"t-share", "share", compact ? "Share" : "Export", [this]() {}, false, true, "Save, share and export"});
+ 
+-    float bw = compact ? std::min(66 * s, r.w / (float)tools.size()) : 70 * s;
+-    float bh = r.h - 8 * s;
+-    float x = r.x + (compact ? (r.w - bw * (float)tools.size()) / 2 : 10 * s);
+-    for (auto& t : tools) {
+-        Rect b(x, r.y + 4 * s, bw, bh);
++    const int count = (int)tools.size();
++    const int columns = (count + toolbarRows - 1) / toolbarRows;
++    const float bw = compact ? std::min(76 * s, r.w / columns) : 70 * s;
++    const float rowHeight = r.h / toolbarRows;
++    for (int i = 0; i < count; ++i) {
++        auto& t = tools[i];
++        const int row = i / columns;
++        const int countInRow = std::min(columns, count - row * columns);
++        const float left = r.x + (compact ? (r.w - bw * countInRow) / 2 : 10 * s);
++        Rect b(left + (i % columns) * bw, r.y + row * rowHeight + 4 * s, bw, rowHeight - 8 * s);
+         if (ui.iconButton(t.id, b, t.icon, t.label, t.sel, t.enabled, t.tip)) {
+             if (t.id == "t-share") {
+                 std::vector<MenuItem> m = {
+@@ -689,7 +694,6 @@
+                 ui.openMenu(b, m, true);
+             } else if (t.fn) t.fn();
+         }
+-        x += bw;
+     }
+     if (!compact) {
+         // zoom controls on the right
+@@ -718,7 +722,7 @@
+                   " connection" + (st.connectionsToRoute == 1 ? "" : "s") + " still to be routed";
+             col = ui.th.danger;
+         }
+-        float left = x + 10 * s, right = zout.x - 10 * s;
++        float left = r.x + 20 * s + count * bw, right = zout.x - 10 * s;
+         if (!msg.empty() && right - left > 120 * s) {
+             while (msg.size() > 8 && g.textWidth(msg, 13 * s) > right - left) msg = msg.substr(0, msg.size() - 2);
+             g.text({(left + right) / 2, r.center().y}, msg, 13 * s, col, 1);

@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Package the locally rebuilt, source-pinned designElectronics WebAssembly."""
-import hashlib,json,shutil
+import argparse,hashlib,json,shutil
 from pathlib import Path
 root=Path(__file__).resolve().parent
-source=root.parents[2]/'.build/design-electronics-rebuilt'
-expected={'designElectronics.js':'8970e5070019ff4d9d82897d9d82554582815e7729b19dae4c0cb7dfd19ce7d5','designElectronics.wasm':'ad97043a7e58f0d17bf8607187b38c131e4e760714cb1616448854e9939cf631','designElectronics.data':'b47f7a58ff1e8768885267b349018d60932c535938a301c0f3b6a2b0c5f8a7ed'}
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--build-dir',type=Path,default=root.parents[2]/'.build/design-electronics-rebuilt')
+source=parser.parse_args().build_dir
+expected={'designElectronics.js':'87d41faf80c7008fb3f4d30a03eca2aec38dc051dd6795419c09304a19dbe3ac','designElectronics.wasm':'729552c90321f1dd7e2882e86f59b1ec05b3964153d99bb1462a74c4dd1a3526','designElectronics.data':'b47f7a58ff1e8768885267b349018d60932c535938a301c0f3b6a2b0c5f8a7ed'}
 validated={}
 for name,h in expected.items():
  data=(source/name).read_bytes()
