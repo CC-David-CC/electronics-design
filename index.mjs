@@ -18,7 +18,27 @@ export function mount(host){
  const syncingProject='Project saved on this device. Syncing to My files.';
  let recoveryPath=null;const retryProject=textButton('Retry saved project',()=>{if(recoveryPath)void open(recoveryPath,false);});retryProject.hidden=true;function clearRecovery(){recoveryPath=null;retryProject.hidden=true;}
  function clearWatch(){watchSerial++;checkSerial++;unwatch();unwatch=()=>{};fileWarning.hidden=true;fileWarning.textContent='';}
- function watch(c,p){clearWatch();const serial=watchSerial;const check=async()=>{const expected=state.version,checkId=++checkSerial;if(!valid()||!c.valid()||!expected||state.path!==p)return;let message='';try{const f=await c.files.stat(p);if(f.status==='conflict')message='This project has conflicting copies. The current design remains open; resolve the conflict in Files.';else if(f.version!==expected)message='The saved project changed. The current design remains open; save a copy or reopen it.';else if(f.status==='synced'&&status.textContent===syncingProject)tell('Project saved to My files.');}catch{message='The saved project is unavailable. The current design remains open.';}if(valid()&&c.valid()&&serial===watchSerial&&checkId===checkSerial&&state.path===p&&state.version===expected){fileWarning.textContent=message;fileWarning.hidden=!message;}};unwatch=c.files.subscribe(check);queueMicrotask(check);}
+ function watch(c,path){
+  clearWatch();
+  const serial=watchSerial;
+  const check=async()=>{
+   const version=state.version,checkId=++checkSerial;
+   if(!valid()||!c.valid()||!version||state.path!==path)return;
+   let warning='',synced=false;
+   try{
+    const file=await c.files.stat(path);
+    if(file.status==='conflict')warning='This project has conflicting copies. The current design remains open; resolve the conflict in Files.';
+    else if(file.version!==version)warning='The saved project changed. The current design remains open; save a copy or reopen it.';
+    else synced=file.status==='synced';
+   }catch{warning='The saved project is unavailable. The current design remains open.';}
+   if(!valid()||!c.valid()||serial!==watchSerial||checkId!==checkSerial||state.path!==path||state.version!==version)return;
+   fileWarning.textContent=warning;
+   fileWarning.hidden=!warning;
+   if(synced&&status.textContent===syncingProject)tell('Project saved to My files.');
+  };
+  unwatch=c.files.subscribe(check);
+  queueMicrotask(check);
+ }
  function module(){const m=frame.contentWindow?.Module;if(!m?.FS||!m.ccall||!frame.contentDocument?.querySelector('#status')?.hidden)throw Error('The editor is still starting.');return m;}
  function revision(){const value=module().ccall('de_web_revision','number',[],[]);if(!Number.isInteger(value)||value<0)throw Error('The editor is still starting.');return value;}
  function syncIdentity(){const epoch=module().ccall('de_web_epoch','number',[],[]);if(!Number.isInteger(epoch)||epoch<0)throw Error('The editor is still starting.');if(knownEpoch!==null&&epoch!==knownEpoch){clearRecovery();clearWatch();state.path=null;state.version=null;w.launchContext=null;projectPath.value=defaultProjectPath;w.title='Untitled — Electronics Design';newDocument=true;sourceGuard=null;sourceWarning.hidden=true;sourceWarning.textContent='';}knownEpoch=epoch;return epoch;}
